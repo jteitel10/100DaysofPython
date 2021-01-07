@@ -1,30 +1,28 @@
-import art
+from replit import clear
+from art import logo
 
-print(art.logo)
+print(logo)
+print("Welcome to the secret auction program")
+live_bid = True
+bid_dict = {}
 
-alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+def find_highest_bidder(bidding_record):
+  highest_bid = 0
+  winner = ""
+  for bidder in bidding_record:
+    bid_amount = bidding_record[bidder]
+    if bid_amount > highest_bid:
+      highest_bid = bid_amount
+      winner = bidder
+  print(f"The winner is {winner.capitalize()} with a bid of ${highest_bid}.")
 
-def caesar(start_text, shift_amount, cipher_direction):
-  end_text = ""
-  if cipher_direction == "decode":
-    shift_amount *= -1
-  for char in start_text:
-    if char in alphabet:
-      position = alphabet.index(char)
-      new_position = position + shift_amount
-      end_text += alphabet[new_position]
-    else:
-      end_text += char
-
-  print(f"Here's the {cipher_direction}d result: {end_text}")
-
-should_continue = True
-while should_continue:
-  direction = input("Type 'encode' to encrypt, type 'decode' to decrypt:\n")
-  text = input("Type your message:\n").lower()
-  shift = int(input("Type the shift number:\n"))
-  shift = shift % 26
-  caesar(start_text=text, shift_amount=shift, cipher_direction=direction)
-  result = input("Start again?\nYes or No?\n").lower()
-  if result == "no":
-    should_continue = False
+while live_bid:
+  name = input("What is your name?:\n").lower()
+  bid = int(input("What's your bid?\n$"))
+  other_bidders = input("Are there any other bidders? Type 'yes' or 'no'.\n").lower()
+  bid_dict[name] = bid
+  if other_bidders == "no":
+    live_bid = False
+    find_highest_bidder(bid_dict)
+  elif other_bidders == "yes":
+    clear()
