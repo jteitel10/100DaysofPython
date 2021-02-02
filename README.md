@@ -7,3 +7,5 @@ During this one hundred day challenge, I plan on learning new topics in Python a
   * Create websites and webapps using Python
   * Make simple games using Python
   * Explore modern Python frameworks (i.e. Flask, Pandas, NumPy, Beautiful Soup)
+
+This repository is organized into folders by date. /For example/, the path to find Day 56 will be /50s/56.
