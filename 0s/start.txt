@@ -1,0 +1,3 @@
+During my first six days, I spent extra time going through documentation and practicing basic syntax.  I spent several days reviewing variables, data types, string manipulation, control flow, logical operators, the random module, lists, loops, and defining functions.
+
+I did not create any projects these days as I was simply just getting some practice to get some muscle memory going.  I created the first project, a CLI hangman game, on Day 7.
