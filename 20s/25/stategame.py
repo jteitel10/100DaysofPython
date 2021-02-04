@@ -18,7 +18,6 @@ turtle.shape(image)
 
 # list of guessed states to compare
 guessed_states = []
-missing_states = []
 
 # game controller
 correct = 0
@@ -41,9 +40,7 @@ while game_on:
         t.pu()
         t.write("You guessed all the states, congrats!", align='center', font=("Courier", 24, "normal"))
     if answer_state == 'Exit':
-        for state in list_of_states:
-            if state not in guessed_states:
-                missing_states.append(state)
+        missing_states = [missing_state for state in list_of_states if not in guessed_states]
         learning_data = pandas.DataFrame(missing_states)
         learning_data.to_csv('missed_states.csv')
         break
