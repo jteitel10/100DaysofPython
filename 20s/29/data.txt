@@ -1,0 +1,2 @@
+site | user@email.com | pwd
+site2 | user22@email.com | PQHhW*EBoONA9HL
