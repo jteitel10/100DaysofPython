@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from random import randint, choice, shuffle
 import pyperclip
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -21,22 +22,54 @@ def generate_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_pwd():
-    website = website_input.get()
+    website = website_input.get().title()
     usr_name = usr_input.get()
     pswd = pwd_input.get()
+    new_data = {
+        website: {
+            "username" : usr_name,
+            "password":pswd,
+            }
+        }
 
     if len(website) == 0 or len(pswd) == 0 or len(usr_name) == 0:
         messagebox.showinfo(title='Error', message='Please make sure all fields are filled')
     else:
-        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nUser Name: {usr_name} \nPassword: {pswd} \nOK to save?")
+        try:
+            with open ('data.json', 'r') as file:
+                # Reading old data
+                data = json.load(file)
+        except FileNotFoundError:
+            with open('data.json', 'w') as file:
+                json.dump(new_data, file, indent=4)
+        else:
+            # Updating old data with new data
+            data.update(new_data)
+            with open('data.json', 'w') as file:
+                # Saving updated data
+                json.dump(data, file, indent=4)
+        finally:
+            # reset GUI fields
+            website_input.delete(0,END)
+            usr_input.delete(0,END)
+            usr_input.insert(0,'user@email.com')
+            pwd_input.delete(0,END)
+# ---------------------------- FIND PASSWORD ------------------------------- #
+def find_pwd():
+    website = website_input.get()
+    try:
+        with open ('data.json') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No Data File Found.")
+    else:
+            if website in data:
+                usr_info = data[website]['username']
+                pwd_info = data[website]['password']
+                messagebox.showinfo(title=website, message=f"Username: {usr_info}\nPassword: {pwd_info}")
+            else:
+                messagebox.showinfo(title="Error", message=f"No account info for {website.title()}.")
 
-        if is_ok:
-            with open ('data.txt', 'a') as file:
-                file.write(f"{website} | {usr_name} | {pswd}\n")
-                website_input.delete(0,END)
-                usr_input.delete(0,END)
-                usr_input.insert(0,'user@email.com')
-                pwd_input.delete(0,END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -52,8 +85,12 @@ canvas.grid(column=1, row=0)
 # website label and entry
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
-website_input = Entry(width=35)
-website_input.grid(column=1, row=1, columnspan=2)
+website_input = Entry(width=21)
+website_input.grid(column=1, row=1)
+
+# search Button
+search_btn = Button(text="Search", width=14, command=find_pwd)
+search_btn.grid(column=2, row=1, columnspan=2)
 
 # email/username label and entry
 usr_label = Label(text="Email/Username:")
