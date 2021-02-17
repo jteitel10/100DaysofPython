@@ -1,0 +1,1 @@
+Day 34 - Today I spent time updating my work from Day 17, where I created a Quiz game app.  I used the Open Trivia Database API to generate questions for my question bank, and updated my quiz game to use a GUI instead of being performed in the command-line.  All updates can be found on Day 17.
