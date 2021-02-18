@@ -9,8 +9,8 @@ NY_LONG = -73.935242 # NYC longitude
 UMBRELLA_RESPONSE = "☔️ Don't forget an umbrella today! ☔️"
 auth_sid = os.environ.get("TW_AUTH_SID")
 auth_token = os.environ.get("TW_AUTH_TOKEN")
-# trial_num = insert account number
-# dest_num = insert destination number
+# trial_num = insert account phone number
+# dest_num = insert destination phone number
 
 params = {
     "lat" : NY_LAT,
