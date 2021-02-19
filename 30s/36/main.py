@@ -47,7 +47,7 @@ else:
     up_down = "🔻"
 diff_percent = round(((abs_diff / yesterday_tesla) * 100),2)
 # if greater than 5%, get the first 3 news pieces for the COMPANY_NAME.
-if diff_percent > 0:
+if diff_percent > 5:
     news_params = {
     "apiKey" : NEWS_API_KEY,
     "qInTitle": COMPANY_NAME,
