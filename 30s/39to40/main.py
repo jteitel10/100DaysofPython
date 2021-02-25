@@ -28,7 +28,10 @@ for destination in sheet_data:
         from_time=tomorrow,
         to_time=six_months
     )
-    if flight.price < destination["lowestPrice"]:
-        notification_manager.send_notification(
-            message = f"Low price alert! Only ${flight.price} to fly from New York-{ORIGIN_CITY_IATA} to {flight.departure_city}-{flight.departure_airport_code}, from {flight.out_date} to {flight.return_date}."
-        )
+    try:
+        if flight.price < destination["lowestPrice"]:
+            notification_manager.send_notification(
+                message=f"Low price alert! Only ${flight.price} to fly from New York-{ORIGIN_CITY_IATA} to {flight.departure_city}-{flight.departure_airport_code}, from {flight.out_date} to {flight.return_date}."
+            )
+    except AttributeError:
+        pass
