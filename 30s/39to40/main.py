@@ -21,17 +21,31 @@ if sheet_data[0]["iataCode"] == "":
     datamgr.destination_data = sheet_data
     datamgr.update_destination_codes()
 
-for destination in sheet_data:
+destinations = {
+    data["iataCode"]: {
+        "id": data["id"],
+        "city": data["city"],
+        "price": data["lowestPrice"],
+    } for data in sheet_data}
+
+for destination_code in destinations:
     flight = flight_search.check_flights(
         origin_airport=ORIGIN_CITY_IATA,
-        departure_airport_code=destination["iataCode"],
+        departure_airport_code=destination_code,
         from_time=tomorrow,
         to_time=six_months
     )
-    try:
-        if flight.price < destination["lowestPrice"]:
-            notification_manager.send_notification(
-                message=f"Low price alert! Only ${flight.price} to fly from New York-{ORIGIN_CITY_IATA} to {flight.departure_city}-{flight.departure_airport_code}, from {flight.out_date} to {flight.return_date}."
-            )
-    except AttributeError:
-        pass
+    if flight is None:
+        continue
+    if flight.price < destinations[destination_code]["price"]:
+        users = datamgr.get_customer_emails()
+        emails = [row["email"] for row in users]
+        names = [row["firstName"] for row in users]
+
+        message = f"Low price alert! Only ${flight.price} to fly from New York-{ORIGIN_CITY_IATA} to {flight.departure_city}-{flight.departure_airport_code}, from {flight.out_date} to {flight.return_date}."
+
+        if flight.stop_overs > 0:
+            message += f"\nFlight has {flight.stop_overs} stop over, via {flight.via_city}."
+        link = f"https://www.google.co.uk/flights?hl=en#flt={flight.origin_airport}.{flight.departure_airport_code}.{flight.out_date}*{flight.departure_airport_code}.{flight.origin_airport}.{flight.return_date}"
+
+        notification_manager.send_emails(emails, message, link)
