@@ -10,9 +10,11 @@ movie_html = response.text
 
 # parse through BS4
 soup = BeautifulSoup(movie_html, "html.parser")
-all_titles = print(soup.find_all(name="h3", class_="jsx-2692754980"))
+all_movies = soup.find_all(name="h3", class_="title")
+all_titles = [movie.getText() for movie in all_movies]
 rev_titles = all_titles[::-1]
 
+# create a file with a list of the movies
 with open("movies.txt", mode="w") as file:
     for title in rev_titles:
-        file.write(f"{title}\n")
+        file.write(f"{title}")
