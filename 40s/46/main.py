@@ -8,6 +8,21 @@ CLIENT_ID = "YOUR CLIENT ID"
 CLIENT_SECRET = "YOUR SECRET CLIENT"
 REDIRECT_URI = "http://example.com"
 
+# date for search
+date = input(
+    "Which year do you want to travel to?  Type the data in the format YYYY-MM-DD\n")
+
+# request billboard data
+billboard_response = requests.get(URL)
+billboard_data = billboard_response.text
+
+# parse through data
+soup = BeautifulSoup(billboard_data, "html.parser")
+songs = soup.find_all(name="span", class_="chart-element__information__song")
+song_titles = [song.getText() for song in songs]
+song_uris = []
+year = date[0:4]
+
 # authenticate to spotify
 sp = spotipy.Spotify(
     auth_manager=SpotifyOAuth(
@@ -21,30 +36,10 @@ sp = spotipy.Spotify(
 )
 user_id = sp.current_user()["id"]
 
-# date for search
-date = input(
-    "Which year do you want to travel to?  Type the data in the format YYYY-MM-DD\n")
-
-# request billboard data
-billboard_response = requests.get(URL)
-billboard_response.raise_for_status()
-billboard_data = billboard_response.text
-
-# parse through data
-soup = BeautifulSoup(billboard_data, "html.parser")
-songs = soup.find_all(name="span", class_="chart-element__information__song")
-song_titles = [song.getText() for song in songs]
-song_uris = []
-year = int(date[0:4])
-
 # search for the song in spotify and add to the song uri list.
 # if the song is not on spotify, except the error and move onto the next one
 for song in song_titles:
-    song_query = {
-        "track": f"{song}",
-        "year": f"{year}"
-    }
-    result = sp.search(q=song_query, type="track")
+    result = sp.search(q=f"track:{song} year:{year}", type="track")
     try:
         uri = result["tracks"]["items"][0]["uri"]
         song_uris.append(uri)
